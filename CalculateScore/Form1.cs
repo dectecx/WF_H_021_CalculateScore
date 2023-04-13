@@ -12,35 +12,89 @@ namespace CalculateScore
 {
     public partial class Form1 : Form
     {
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        #region 第一題
         /// <summary>
         /// 學號
         /// </summary>
-        string[] Nos;
+        string[] Nos = new string[0];
 
         /// <summary>
         /// 國文成績
         /// </summary>
-        int[] ChScores;
+        int[] ChScores = new int[0];
 
         /// <summary>
         /// 英文成績
         /// </summary>
-        int[] EnScores;
+        int[] EnScores = new int[0];
 
         /// <summary>
         /// 數學成績
         /// </summary>
-        int[] MaScores;
+        int[] MaScores = new int[0];
 
-        public Form1()
+        /// <summary>
+        /// 三科總成績
+        /// </summary>
+        int[] TotalScores = new int[0];
+
+        /// <summary>
+        /// 輸入成績
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btn_Submit_Click(object sender, EventArgs e)
         {
-            InitializeComponent();
+            if (Nos.Length >= 5)
+            {
+                MessageBox.Show("最多輸入5名資料");
+                return;
+            }
+            // 資料轉換
+            int chScore = 0;
+            int enScore = 0;
+            int maScore = 0;
+            int totalScore = 0;
+            try
+            {
+                chScore = Convert.ToInt32(tb_Ch1.Text);
+                enScore = Convert.ToInt32(tb_En1.Text);
+                maScore = Convert.ToInt32(tb_Ma1.Text);
+                totalScore = chScore + enScore + maScore;
+            }
+            catch
+            {
+                MessageBox.Show("請輸入成績(限數字)");
+                return;
+            }
+            // 更新陣列
+            string[] tempNo = Nos;
+            int[] tempCh = ChScores;
+            int[] tempEn = EnScores;
+            int[] tempMa = MaScores;
+            int[] tempTotal = TotalScores;
+            Nos = new string[Nos.Length + 1];
+            ChScores = new int[ChScores.Length + 1];
+            EnScores = new int[EnScores.Length + 1];
+            MaScores = new int[MaScores.Length + 1];
+            TotalScores = new int[TotalScores.Length + 1];
+            tempNo.CopyTo(Nos, 0);
+            tempCh.CopyTo(ChScores, 0);
+            tempEn.CopyTo(EnScores, 0);
+            tempMa.CopyTo(MaScores, 0);
+            tempMa.CopyTo(TotalScores, 0);
+            Nos[Nos.Length - 1] = tb_No1.Text;
+            ChScores[ChScores.Length - 1] = chScore;
+            EnScores[EnScores.Length - 1] = enScore;
+            MaScores[MaScores.Length - 1] = maScore;
+            TotalScores[TotalScores.Length - 1] = totalScore;
 
-            // 初始化
-            Nos = new string[0];
-            ChScores = new int[0];
-            EnScores = new int[0];
-            MaScores = new int[0];
+            RenderTable("");
         }
 
         /// <summary>
@@ -53,49 +107,27 @@ namespace CalculateScore
             RenderTable(searchNo);
         }
 
-        private void btn_Submit_Click(object sender, EventArgs e)
+        /// <summary>
+        /// 取得成績排名名次
+        /// </summary>
+        /// <param name="totalScore"></param>
+        private int GetRank(int totalScore)
         {
-            if (Nos.Length >= 5)
+            int rank = 1;
+            for(int i = 0; i < TotalScores.Length; i++)
             {
-                MessageBox.Show("最多輸入5名資料");
-                return;
+                if (TotalScores[i] > totalScore)
+                {
+                    rank++;
+                }
             }
-            // 資料轉換
-            int chScore = 0;
-            int enScore = 0;
-            int maScore = 0;
-            try
-            {
-                chScore = Convert.ToInt32(tb_Ch1.Text);
-                enScore = Convert.ToInt32(tb_En1.Text);
-                maScore = Convert.ToInt32(tb_Ma1.Text);
-            }
-            catch
-            {
-                MessageBox.Show("請輸入成績(限數字)");
-                return;
-            }
-            // 更新陣列
-            string[] tempNo = Nos;
-            int[] tempCh = ChScores;
-            int[] tempEn = EnScores;
-            int[] tempMa = MaScores;
-            Nos = new string[Nos.Length + 1];
-            ChScores = new int[ChScores.Length + 1];
-            EnScores = new int[EnScores.Length + 1];
-            MaScores = new int[MaScores.Length + 1];
-            tempNo.CopyTo(Nos, 0);
-            tempCh.CopyTo(ChScores, 0);
-            tempEn.CopyTo(EnScores, 0);
-            tempMa.CopyTo(MaScores, 0);
-            Nos[Nos.Length - 1] = tb_No1.Text;
-            ChScores[ChScores.Length - 1] = chScore;
-            EnScores[EnScores.Length - 1] = enScore;
-            MaScores[MaScores.Length - 1] = maScore;
-
-            RenderTable("");
+            return rank;
         }
 
+        /// <summary>
+        /// 顯示成績(不及格以紅色顯示)、計算總平均
+        /// </summary>
+        /// <param name="searchNo"></param>
         private void RenderTable(string searchNo)
         {
             // 渲染表格
@@ -106,10 +138,6 @@ namespace CalculateScore
             table.Columns.Add("數學");
             table.Columns.Add("平均");
             table.Columns.Add("排名");
-            int totalCount = 0;
-            int chTotalScore = 0;
-            int enTotalScore = 0;
-            int maTotalScore = 0;
             for (int i = 0; i < Nos.Length; i++)
             {
                 // 如果沒傳入查詢學號 或 與查詢學號相同才加入表格中
@@ -120,25 +148,33 @@ namespace CalculateScore
                     dr["國文"] = ChScores[i];
                     dr["英文"] = EnScores[i];
                     dr["數學"] = MaScores[i];
-                    dr["平均"] = (ChScores[i] + EnScores[i] + MaScores[i]) / 3;
-                    dr["排名"] = "";
+                    dr["平均"] = Math.Round(TotalScores[i] / 3.0, 2); // 四捨五入取小數第二位
+                    dr["排名"] = GetRank(TotalScores[i]);
                     table.Rows.Add(dr);
-
-                    totalCount++;
-                    chTotalScore += ChScores[i];
-                    enTotalScore += EnScores[i];
-                    maTotalScore += MaScores[i];
                 }
             }
             // 若至少有一筆,則各科計算平均
             if (table.Rows.Count > 0)
             {
+                int totalCount = Nos.Length;
+                int chTotalScore = 0;
+                int enTotalScore = 0;
+                int maTotalScore = 0;
+                int totalScore = 0;
+                for (int i = 0; i < totalCount; i++)
+                {
+                    chTotalScore += ChScores[i];
+                    enTotalScore += EnScores[i];
+                    maTotalScore += MaScores[i];
+                    totalScore += TotalScores[i];
+                }
+
                 DataRow dr = table.NewRow();
                 dr["學號"] = "平均";
                 dr["國文"] = chTotalScore / totalCount;
                 dr["英文"] = enTotalScore / totalCount;
                 dr["數學"] = maTotalScore / totalCount;
-                dr["平均"] = (chTotalScore + enTotalScore + maTotalScore) / (totalCount * 3);
+                dr["平均"] = Math.Round(totalScore / 3.0, 2); // 四捨五入取小數第二位
                 dr["排名"] = "";
                 table.Rows.Add(dr);
             }
@@ -157,6 +193,7 @@ namespace CalculateScore
                 }
             }
         }
+        #endregion
 
         #region 第二題
         /// <summary>
