@@ -43,6 +43,20 @@ namespace CalculateScore
         /// </summary>
         int[] TotalScores = new int[0];
 
+        private void btn_ResetForm_Click(object sender, EventArgs e)
+        {
+            Nos = new string[0];
+            ChScores = new int[0];
+            EnScores = new int[0];
+            MaScores = new int[0];
+            TotalScores = new int[0];
+            tb_Ch1.Text = "";
+            tb_En1.Text = "";
+            tb_Ma1.Text = "";
+            tb_SearchNo.Text = "";
+            RenderTable("");
+        }
+
         /// <summary>
         /// 輸入成績
         /// </summary>
@@ -87,7 +101,7 @@ namespace CalculateScore
             tempCh.CopyTo(ChScores, 0);
             tempEn.CopyTo(EnScores, 0);
             tempMa.CopyTo(MaScores, 0);
-            tempMa.CopyTo(TotalScores, 0);
+            tempTotal.CopyTo(TotalScores, 0);
             Nos[Nos.Length - 1] = tb_No1.Text;
             ChScores[ChScores.Length - 1] = chScore;
             EnScores[EnScores.Length - 1] = enScore;

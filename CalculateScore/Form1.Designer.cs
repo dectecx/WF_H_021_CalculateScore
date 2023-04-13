@@ -58,6 +58,7 @@
             this.label12 = new System.Windows.Forms.Label();
             this.lb_AvgResult = new System.Windows.Forms.Label();
             this.btn_Reset = new System.Windows.Forms.Button();
+            this.btn_ResetForm = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gv_Table)).BeginInit();
@@ -131,6 +132,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.btn_ResetForm);
             this.tabPage1.Controls.Add(this.label6);
             this.tabPage1.Controls.Add(this.tb_SearchNo);
             this.tabPage1.Controls.Add(this.btn_SearchNo);
@@ -381,6 +383,16 @@
             this.btn_Reset.UseVisualStyleBackColor = true;
             this.btn_Reset.Click += new System.EventHandler(this.btn_Reset_Click);
             // 
+            // btn_ResetForm
+            // 
+            this.btn_ResetForm.Location = new System.Drawing.Point(874, 6);
+            this.btn_ResetForm.Name = "btn_ResetForm";
+            this.btn_ResetForm.Size = new System.Drawing.Size(138, 49);
+            this.btn_ResetForm.TabIndex = 34;
+            this.btn_ResetForm.Text = "清除";
+            this.btn_ResetForm.UseVisualStyleBackColor = true;
+            this.btn_ResetForm.Click += new System.EventHandler(this.btn_ResetForm_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
@@ -431,6 +443,7 @@
         private System.Windows.Forms.Label lb_AvgResult;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Button btn_Reset;
+        private System.Windows.Forms.Button btn_ResetForm;
     }
 }
 
